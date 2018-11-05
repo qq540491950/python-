@@ -45,20 +45,19 @@ def get_images(json):
 
 
 def save_image(item):
-    if not os.path.exists(item.get("image")):
-        os.mkdir(item.get("title"))
+    if not os.path.exists(item.get('title')):
+        os.mkdir(item.get('title'))
     try:
-        res = requests.get(item.get("image"))
-        if res.status_code == 200:
-            # file_path = "{0}/{1}.{2}".format(item.get("title"), md5(res.content).hexdigest(), "jpg")
-            file_path = '{0}/{1}.{2}'.format(item.get('title'), md5(res.content).hexdigest(), 'jpg')
+        response = requests.get("http:" + item.get('image'))
+        if response.status_code == 200:
+            file_path = '{0}/{1}.{2}'.format(item.get('title'), md5(response.content).hexdigest(), 'jpg')
             if not os.path.exists(file_path):
-                with open(file_path, "wb") as f:
-                    f.write(res.content)
-        else:
-            print("Already Downloaded", file_path)
-    except requests.ConnectionError as e:
-        print("Failed to save Image")
+                with open(file_path, 'wb') as f:
+                    f.write(response.content)
+            else:
+                print('Already Downloaded', file_path)
+    except requests.ConnectionError:
+        print('Failed to Save Image')
 
 
 def main(offset):
